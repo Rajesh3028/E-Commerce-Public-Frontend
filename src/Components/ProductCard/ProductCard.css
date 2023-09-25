@@ -10,9 +10,7 @@
   height: 100%;
   display: flex;
   gap: 5px;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-  
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
 }
 
 .card_img {
@@ -22,8 +20,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: stretch;
-  border-radius: 3px;
-  color:white;
+  border-radius: 4px;
+  background-color: #fff;
 }
 .card_img img {
   display: flex;
@@ -46,16 +44,16 @@
   align-self: end;
   border: 1px solid gray;
   border-radius: 50%;
-  background-color: aqua;
+  /* background-color: aqua; */
   margin: 3px;
 }
 .rating_btn {
   align-items: center;
   padding: 5px;
-  color:black
+  color: black;
 }
 .discounted_price {
   color: black;
-  font-family: 'Times New Roman', Times, serif;
+  font-family: "Times New Roman", Times, serif;
   font-weight: 700;
 }

@@ -4,10 +4,12 @@ import { useParams } from "react-router-dom";
 import "./SignleProduct.css";
 import SingleProductSkeleton from "../../Components/Loading/SingleProductSkeleton";
 const SingleProduct = () => {
+  
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any>([]);
   const [img, setImg] = useState<string>("");
   const { id } = useParams();
+
   useEffect(() => {
     setLoading(true);
     axios({
@@ -18,17 +20,10 @@ const SingleProduct = () => {
       .then(({ data }) => {
         setData(data);
         setImg(data.thumbnail);
-        console.log(data);
       })
       .catch((err) => console.dir(err))
       .finally(() => setLoading(false));
   }, [id]);
-
-  // function DiscountPrice(originalPrice: number, discountPercentage: number) {
-  //   const discountedPrice =
-  //     originalPrice - (originalPrice * discountPercentage) / 100;
-  //   return discountedPrice.toFixed(2);
-  // }
 
   function DiscountPrice(
     originalPriceInUSD: number,

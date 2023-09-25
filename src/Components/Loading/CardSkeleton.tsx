@@ -19,7 +19,8 @@ const CardSkeleton = (props: Props) => {
           backgroundColor: "#fff",
         }}
       >
-        <div className="skeleton"
+        <div
+          className="skeleton"
           style={{
             width: "90%",
             height: "30px",
@@ -30,7 +31,8 @@ const CardSkeleton = (props: Props) => {
             borderRadius: "3px",
           }}
         ></div>
-        <div className="skeleton"
+        <div
+          className="skeleton"
           style={{
             height: "190px",
             width: "90%",
@@ -40,7 +42,8 @@ const CardSkeleton = (props: Props) => {
             borderRadius: "3px",
           }}
         ></div>
-        <div className="skeleton"
+        <div
+          className="skeleton"
           style={{
             width: "90%",
             height: "10px",
@@ -51,7 +54,8 @@ const CardSkeleton = (props: Props) => {
             borderRadius: "3px",
           }}
         />
-        <div className="skeleton"
+        <div
+          className="skeleton"
           style={{
             width: "90%",
             height: "10px",
@@ -62,7 +66,8 @@ const CardSkeleton = (props: Props) => {
             borderRadius: "3px",
           }}
         />
-        <div className="skeleton"
+        <div
+          className="skeleton"
           style={{
             width: "90%",
             height: "10px",

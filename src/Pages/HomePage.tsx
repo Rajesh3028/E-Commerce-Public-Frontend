@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useAppSelector } from "../Store/store";
-import { Category } from "../Data";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import ProductCard from "../Components/ProductCard/ProductCard";
@@ -8,28 +7,26 @@ import axios from "axios";
 import "./HomePage.css";
 import CardSkeleton from "../Components/Loading/CardSkeleton";
 import FilterSection from "../Components/FilterSection";
+import CategorySection from "../Components/CategorySection";
+import { Category } from "../Data";
+import Pagination from "../Components/Pagination/Pagination";
 
 const HomePage = () => {
   const Users = useAppSelector((state) => state.users.users);
-  console.log(Users);
 
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
-  
-
-  
 
   useEffect(() => {
     setLoading(true);
     axios({
       method: "GET",
       baseURL: "https://dummyjson.com",
-      url: `/products/${''}/${''}`,
+      url: `/products`,
     })
       .then(({ data }) => {
         setData(data.products);
-        console.log(data);
       })
       .catch((err) => console.dir(err))
       .finally(() => setLoading(false));
@@ -37,20 +34,18 @@ const HomePage = () => {
 
   return (
     <>
-      <section>
-        <div className="container">
-          {Category.map((e) => (
-            <div className="card" key={e.id}>
-              <div className="card_header">
-                <img src={e.img} alt="" />
-              </div>
-              <div className="card_body">
-                <h4>{e.name}</h4>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <div className="container">
+        {Category.map((category) => {
+          return (
+            <CategorySection
+              url={category.url}
+              name={category.name}
+              img={category.img}
+              key={category.id}
+            />
+          );
+        })}
+      </div>
 
       <section>
         <div className="carousel_container">
@@ -99,9 +94,9 @@ const HomePage = () => {
       <section>
         <div className="main_grid mx_auto margin_bt">
           <div className="div_1">
-              <section>
-              <FilterSection/>
-              </section>
+            <section>
+              <FilterSection />
+            </section>
           </div>
           <div className="div_2">
             <section>
@@ -117,10 +112,8 @@ const HomePage = () => {
                   gap: "20px",
                 }}
               >
-                {/* <CardSkeleton noCard={2}/> */}
-                
                 {loading ? (
-                  <CardSkeleton noCard={10}  />
+                  <CardSkeleton noCard={10} />
                 ) : (
                   data
                     ?.slice(page * 10 - 10, page * 10)
@@ -138,40 +131,43 @@ const HomePage = () => {
                     ))
                 )}
               </div>
-              {data && data.length > 10 ? (
-                <div className="pagination_container mx_auto">
-                  <button
-                    className="pagination_btn"
-                    onClick={() => setPage(page - 1)}
-                    disabled={page === 1}
-                  >
-                    PREV
-                  </button>
-                  {[...Array(data.length / 10)].map((_, i) => {
-                    return (
-                      <button
-                        key={i}
-                        className={
-                          page === i + 1
-                            ? "pagination_btn_active"
-                            : "pagination_btn"
-                        }
-                        onClick={() => setPage(i + 1)}
-                      >
-                        {i + 1}
-                      </button>
-                    );
-                  })}
+              {data && data.length > 10 && (
+                // <div className="pagination_container mx_auto">
+                //   <button
+                //     style={{ borderRadius: "50%", fontWeight: "bold" }}
+                //     className="change_btn"
+                //     onClick={() => setPage(page - 1)}
+                //     disabled={page === 1}
+                //   >
+                //     &#8249;
+                //   </button>
+                //   {[...Array(data.length / 10)].map((_, i) => {
+                //     return (
+                //       <button
+                //         key={i}
+                //         className={
+                //           page === i + 1
+                //             ? "pagination_btn_active"
+                //             : "pagination_btn"
+                //         }
+                //         onClick={() => setPage(i + 1)}
+                //       >
+                //         {i + 1}
+                //       </button>
+                //     );
+                //   })}
 
-                  <button
-                    className="pagination_btn"
-                    onClick={() => setPage(page + 1)}
-                    disabled={page === data.length / 10}
-                  >
-                    NEXT
-                  </button>
-                </div>
-              ) : null}
+                //   <button
+                //     style={{ borderRadius: "50%", fontWeight: "bold" }}
+                //     className="change_btn"
+                //     onClick={() => setPage(page + 1)}
+                //     disabled={page === data.length / 10}
+                //   >
+                //     &#8250;
+                //   </button>
+                // </div>
+                <Pagination data={data} page={page} setPage={setPage} />
+              )}
             </section>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./ProductCard.css";
 import { Link } from "react-router-dom";
+
 type Props = {
   img: string;
   description: string;
@@ -21,12 +22,6 @@ const ProductCard = (props: Props) => {
     }
     return title;
   };
-
-  // function DiscountPrice(originalPrice: number, discountPercentage: number) {
-  //   const discountedPrice =
-  //     originalPrice - (originalPrice * discountPercentage) / 100;
-  //   return discountedPrice.toFixed(2);
-  // };
 
   function DiscountPrice(
     originalPriceInUSD: number,

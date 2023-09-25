@@ -1,10 +1,41 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Cart.css";
+
 const Cart = () => {
-  const [cart, setCart] = React.useState(false);
+  const [cart, setCart] = useState(true);
+  const [code, setCode] = useState<number>();
+  const [city, setCity] = useState<string>();
+
+  const getPincode = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+          );
+          const data = await response.json();
+          const userPincode = data?.address.postcode;
+          const userCity = data?.address.city;
+          setCode(userPincode);
+          setCity(userCity);
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  };
+
+  useEffect(() => {
+    getPincode();
+  }, []);
+
   return (
     <>
-    <button onClick={()=>setCart(!cart)}>Toggle</button>
+      <button onClick={() => setCart(!cart)}>Toggle</button>
       {cart ? (
         <div className="cart_main mx_auto">
           <div className="cart_container_wraper">
@@ -26,8 +57,9 @@ const Cart = () => {
                 >
                   <div className="">Deliver To : </div>
                   <div>
-                    {" "}
-                    <span className="location_span">Location - 444131</span>
+                    <span className="location_span">
+                      {city} - {code}
+                    </span>
                   </div>
                 </div>
                 <div>
@@ -67,7 +99,7 @@ const Cart = () => {
                     <div className="qty_btn_inner">
                       <button className="qty_btn">-</button>
                       <div className="qty_count">
-                        <input type="text" className="qty_input" value={3} />
+                        <input type="text" className="qty_input" />
                       </div>
                       <button className="qty_btn">+</button>
                     </div>
@@ -108,7 +140,7 @@ const Cart = () => {
                     <div className="qty_btn_inner">
                       <button className="qty_btn">-</button>
                       <div className="qty_count">
-                        <input type="text" className="qty_input" value={3} />
+                        <input type="text" className="qty_input" />
                       </div>
                       <button className="qty_btn">+</button>
                     </div>
@@ -197,7 +229,9 @@ const Cart = () => {
                 Login to see the items you added previously
               </div>
               <button className="login_btn_cart">
-                <span style={{ fontSize: "14px",cursor:'pointer' }}>Login</span>
+                <span style={{ fontSize: "14px", cursor: "pointer" }}>
+                  Login
+                </span>
               </button>
             </div>
           </div>
