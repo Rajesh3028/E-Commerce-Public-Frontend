@@ -1,0 +1,39 @@
+.main_grid {
+  display: grid;
+  grid-template-columns: 2fr 10fr;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+  justify-items: stretch;
+  align-items: stretch;
+  width: 90%;
+  height: auto;
+}
+.div_1 {
+  display: grid;
+  display: inline-grid;
+  display: subgrid;
+}
+.div_2 {
+  display: grid;
+  display: inline-grid;
+  display: subgrid;
+  min-height: auto;
+}
+.pagination_container {
+  margin: 20px 0;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.pagination_btn {
+  padding: 5px;
+  cursor: pointer;
+}
+.pagination_btn_active {
+  background-color: blueviolet;
+  color: beige;
+  padding: 5px;
+  cursor: pointer;
+}
