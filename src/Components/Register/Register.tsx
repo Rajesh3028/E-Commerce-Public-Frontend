@@ -2,50 +2,67 @@ import React, { useState } from "react";
 import "./Register.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../Store/store";
-import { addUser } from "../../Store/features/userSlice";
+import { signUpUser } from "../../Store/features/authSlice";
+import { useAppSelector } from "../../Store/store";
 
 const Register = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
+  const [phone, setPhone] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  const { loading, error, message } = useAppSelector((state) => state.user);
+
   function registerHandler(e: any) {
     e.preventDefault();
     const data = {
-      id: Math.floor(Math.random() * 1000000),
-      name: name,
+      username: username,
       email: email,
       password: password,
+      first_name: name,
+      last_name: "Muneshwar",
+      phone_number: phone,
+      date_of_birth: "12/01/1998",
+      address: "abcd efgh i",
+      confirm_password: password,
     };
-    dispatch(addUser(data));
-    setName("");
-    setEmail("");
-    setPassword("");
-    setConfirmPassword("");
-    alert("Registered Successfully");
-    navigate("/login");
+    dispatch(signUpUser(data));
+
+    // navigate("/login");
   }
 
   return (
     <div className="register-container">
+      {loading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
+      {message && <p>{message} </p>}
       <form className="form" onSubmit={registerHandler}>
         <div>
           <h1 className="register-title">Register</h1>
         </div>
         <div className="form-ip-sec">
-          <label htmlFor="name">Name:</label>
+          <label htmlFor="name">User Name:</label>
           <input
             type="text"
             id="name"
-            placeholder="Enter full name"
+            placeholder="Enter Your User Name"
             required
-            onChange={(e: any) => setName(e.target.value)}
+            onChange={(e: any) => setUsername(e.target.value)}
           ></input>
         </div>
-
+        <div className="form-ip-sec">
+          <label htmlFor="name">Phone:</label>
+          <input
+            type="text"
+            id="name"
+            placeholder="Enter Mobile No."
+            required
+            onChange={(e: any) => setPhone(e.target.value)}
+          ></input>
+        </div>
         <div className="form-ip-sec">
           <label htmlFor="email">E-mail:</label>
           <input
@@ -69,13 +86,13 @@ const Register = () => {
         </div>
 
         <div className="form-ip-sec">
-          <label htmlFor="confirmpassword">Password:</label>
+          <label htmlFor="confirmpassword">Name:</label>
           <input
-            type="password"
+            type="text"
             id="confirmpassword"
-            placeholder="Confirm password"
+            placeholder="Your Name"
             required
-            onChange={(e: any) => setConfirmPassword(e.target.value)}
+            onChange={(e: any) => setName(e.target.value)}
           ></input>
         </div>
 

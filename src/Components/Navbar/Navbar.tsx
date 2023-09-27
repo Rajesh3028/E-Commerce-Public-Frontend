@@ -3,11 +3,19 @@ import { Link, NavLink } from "react-router-dom";
 import "./Navbar.css";
 import { FcShop } from "react-icons/fc";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { useAppDispatch } from "../../Store/store";
+import { logOut } from "../../Store/features/authSlice";
+import { useAppSelector } from "../../Store/store";
 const Navbar: React.FC = () => {
   const [showNavbar, setShowNavbar] = useState(false);
 
+  const dispatch = useAppDispatch();
+  const { isAuthenticated } = useAppSelector((state) => state.user);
   const handleShowNavbar = () => {
     setShowNavbar(!showNavbar);
+  };
+  const handleLogout = () => {
+    dispatch(logOut());
   };
   return (
     <nav className="navbar-main">
@@ -34,6 +42,10 @@ const Navbar: React.FC = () => {
             </li>
             <li>
               <NavLink to="/login">Login</NavLink>
+            </li>
+            <li>
+              {isAuthenticated && <button onClick={handleLogout}>Logout</button>}
+              
             </li>
           </ul>
         </div>

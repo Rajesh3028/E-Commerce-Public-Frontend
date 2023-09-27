@@ -35,7 +35,6 @@ const Cart = () => {
 
   return (
     <>
-      <button onClick={() => setCart(!cart)}>Toggle</button>
       {cart ? (
         <div className="cart_main mx_auto">
           <div className="cart_container_wraper">

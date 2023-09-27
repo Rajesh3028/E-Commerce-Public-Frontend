@@ -21,12 +21,10 @@ function App() {
           path="/products/:id/Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, cum?"
           element={<SingleProduct />}
         />
-         <Route
-          path="/category/:id"
-          element={<CategoryPage />}
-        />
-        <Route element={<ProtectedRoutes />}></Route>
-        <Route path="/cart" element={<Cart />} />
+        <Route path="/category/:id" element={<CategoryPage />} />
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/cart" element={<Cart />} />
+        </Route>
       </Routes>
     </div>
   );

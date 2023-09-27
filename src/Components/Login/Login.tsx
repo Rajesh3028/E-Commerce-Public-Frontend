@@ -1,48 +1,47 @@
 import React, { useState } from "react";
 import "./Login.css";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { signInUser } from "../../Store/features/authSlice";
+import { useAppDispatch } from "../../Store/store";
 import { useAppSelector } from "../../Store/store";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [emailError, setEmailError] = useState<string>("");
-  const [passwordError, setPasswordError] = useState<string>("");
- 
   const navigate = useNavigate();
+  const { loading, message } = useAppSelector((state) => state.user);
 
-  const Users = useAppSelector((state) => state.users.users);
+  const dispatch = useAppDispatch();
 
-  console.log(Users);
-
-  const signInHandler = (e:any) => {
+  const signInHandler = async (e: any) => {
     e.preventDefault();
-    console.log(Users);
-   const signIn = Users.find((user) => user.email === email && user.password === password);
-   console.log(signIn);
-   if(signIn){
-     alert('Login Successful');
-     localStorage.setItem('user',JSON.stringify(signIn));
-     navigate('/');
+    const data = {
+      username: email,
+      password: password,
+    };
+    try {
+      const response = await dispatch(signInUser(data));
 
-   }else{
-    alert('Login Failed');
-   }
-  }
-  ;
-
+      if (response.payload) {
+        navigate("/");
+      } else {
+      }
+    } catch (error) {
+      
+    }
+  };
   return (
     <div className="signin-container">
       <form className="form" onSubmit={signInHandler}>
         <div>
           <h1>Sign In</h1>
         </div>
-        {/* {loading && <LoadingBox></LoadingBox>}
-        {error && <MessageBox variant="danger">{error}</MessageBox>} */}
+        {loading && <p>Loading.....</p>}
+        {message && <p>{message}</p>}
         <div className="form-ip-sec">
           <label htmlFor="email">E-mail:</label>
           <input
-            type="email"
+            type="text"
             id="email"
             placeholder="Enter email"
             required
@@ -70,7 +69,7 @@ const Login = () => {
           <label />
           <div>
             New user?
-            <Link to='/register'>Create Account</Link>
+            <Link to="/register">Create Account</Link>
           </div>
         </div>
       </form>
