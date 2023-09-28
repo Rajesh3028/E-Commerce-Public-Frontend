@@ -2,10 +2,10 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {
   isAuthenticated: boolean;
-  user: {};
+  user: any;
   loading: boolean;
   error: string;
-  message: string;
+  message: string | null;
   accessToken: string | null;
   refreshToken: string | null;
 }
@@ -33,7 +33,7 @@ const initialState: AuthState = {
   refreshToken: "",
 };
 
-export const signUpUser = createAsyncThunk<SignUpPayload, any>(
+export const signUpUser = createAsyncThunk<any, any>(
   "auth/signUpUser",
   async (user) => {
     const res = await fetch(
@@ -68,7 +68,7 @@ export const signUpUser = createAsyncThunk<SignUpPayload, any>(
 //   }
 // );
 
-export const signInUser = createAsyncThunk<SignInPayload, any>(
+export const signInUser = createAsyncThunk<any, any>(
   "auth/signInUser",
   async (user, { dispatch, rejectWithValue }) => {
     try {
@@ -88,7 +88,6 @@ export const signInUser = createAsyncThunk<SignInPayload, any>(
       if (!res.ok) {
         return rejectWithValue(data.error);
       }
-
       return data;
     } catch (error) {
       return rejectWithValue("An error occurred while signing in");
@@ -99,24 +98,28 @@ export const signInUser = createAsyncThunk<SignInPayload, any>(
 export const refreshToken = createAsyncThunk(
   "auth/refreshToken",
   async (_, { getState, dispatch, rejectWithValue }) => {
+    console.log("i am running");
     try {
-      const refreshToken = localStorage.getItem("refreshToken");
+      const Token = localStorage.getItem("accessToken");
 
+      const refreshToken = { refreshToken: Token };
       const res = await fetch(
         "https://e-commerce-backend-zprm.onrender.com/user/refreshToken",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${refreshToken}`,
           },
+          body: JSON.stringify(refreshToken),
         }
       );
       const data = await res.json();
+      console.log(data, "This is data1111");
       if (!res.ok) {
         return rejectWithValue(data.error);
       }
       dispatch(updateAccessToken(data.accessToken));
+      console.log(data, "This is data");
       return data;
     } catch (error) {
       return rejectWithValue("An error occurred while refreshing token");
@@ -138,9 +141,11 @@ export const authSlice = createSlice({
       state.isAuthenticated = false;
       state.accessToken = null;
       state.refreshToken = null;
+      state.user = null;
+      state.message = null;
     },
     updateAccessToken: (state, action) => {
-      state.accessToken = action.payload;
+      state.accessToken = action.payload.accessToken;
     },
   },
   extraReducers: (builder) => {
@@ -163,17 +168,18 @@ export const authSlice = createSlice({
       );
       state.isAuthenticated = true;
     });
-    builder.addCase(signUpUser.rejected, (state, action) => {
+    builder.addCase(signUpUser.rejected, (state) => {
       state.loading = false;
     });
 
     // SignIn User
 
-    builder.addCase(signInUser.pending, (state, action) => {
+    builder.addCase(signInUser.pending, (state) => {
       state.loading = true;
     });
     builder.addCase(signInUser.fulfilled, (state, action) => {
       state.loading = false;
+      state.user = action.payload.payLoad;
       state.error = action.payload.error;
       state.message = action.payload.message;
       state.accessToken = action.payload.accessToken;
@@ -187,8 +193,35 @@ export const authSlice = createSlice({
         JSON.stringify(action.payload.refreshToken)
       );
       state.isAuthenticated = true;
+      state.user = action.payload.payLoad;
     });
-    builder.addCase(signInUser.rejected, (state, action) => {
+    builder.addCase(signInUser.rejected, (state) => {
+      state.loading = false;
+    });
+
+    //Token Update
+    builder.addCase(refreshToken.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(refreshToken.fulfilled, (state, action) => {
+      state.loading = false;
+      state.user = action.payload.payLoad;
+      state.error = action.payload.error;
+      state.message = action.payload.message;
+      state.accessToken = action.payload.accessToken;
+      localStorage.setItem(
+        "accessToken",
+        JSON.stringify(action.payload.accessToken)
+      );
+      state.refreshToken = action.payload.refreshToken;
+      localStorage.setItem(
+        "refreshToken",
+        JSON.stringify(action.payload.refreshToken)
+      );
+      state.isAuthenticated = true;
+      state.user = action.payload.payLoad;
+    });
+    builder.addCase(refreshToken.rejected, (state) => {
       state.loading = false;
     });
   },

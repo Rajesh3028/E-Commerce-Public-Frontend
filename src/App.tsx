@@ -8,6 +8,7 @@ import Register from "./Components/Register/Register";
 import ProtectedRoutes from "./Routes/ProtectedRoutes";
 import SingleProduct from "./Pages/SingleProduct/SingleProduct";
 import CategoryPage from "./Pages/CategoryPage/CategoryPage";
+import User from "./Components/User/User";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/category/:id" element={<CategoryPage />} />
         <Route element={<ProtectedRoutes />}>
           <Route path="/cart" element={<Cart />} />
+          <Route path="/profile" element={<User/>}/>
         </Route>
       </Routes>
     </div>

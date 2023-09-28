@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signInUser } from "../../Store/features/authSlice";
 import { useAppDispatch } from "../../Store/store";
 import { useAppSelector } from "../../Store/store";
-
+import { toast } from "react-toastify";
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -15,6 +15,7 @@ const Login = () => {
 
   const signInHandler = async (e: any) => {
     e.preventDefault();
+    const id = toast.loading("Logging in");
     const data = {
       username: email,
       password: password,
@@ -22,22 +23,26 @@ const Login = () => {
     try {
       const response = await dispatch(signInUser(data));
 
-      if (response.payload) {
+      if (response.payload.success) {
         navigate("/");
+        toast.update(id, {
+          render: "Logged In Successful",
+          type: "success",
+          isLoading: false,
+          autoClose: 2000,
+        });
       } else {
       }
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   };
+
   return (
     <div className="signin-container">
       <form className="form" onSubmit={signInHandler}>
         <div>
           <h1>Sign In</h1>
         </div>
-        {loading && <p>Loading.....</p>}
-        {message && <p>{message}</p>}
+
         <div className="form-ip-sec">
           <label htmlFor="email">E-mail:</label>
           <input
